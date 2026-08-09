@@ -1,0 +1,10 @@
+{
+    "resourceType": "Appointment",
+    "id": "example-appointment",
+    "status": "booked",
+    "description": "Routine check-up",
+    "start": "2024-07-01T10:00:00Z",
+    "end": "2024-07-01T10:30:00Z",
+
+}
+

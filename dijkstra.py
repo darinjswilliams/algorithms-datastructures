@@ -1,0 +1,60 @@
+import heapq
+
+def dijkstra(edges, src):
+    graph = {}
+    for s, d, w in edges:
+        """
+            The setdfaults is a trick saying
+            
+            if key not in dict:
+                dict[key] = default
+            return dict[key]
+
+        
+        """
+        
+        graph.setdefault(s, []).append((d, w))
+
+    dist = {} #this will hold the shortest distances
+    pq = [(0, src)] #priority queue, goes from smallest to largest, holds (distance, node), src is the starting point with distance 0
+
+    while pq:
+        d, node = heapq.heappop(pq)
+        if node in dist:
+            continue
+        dist[node] = d
+
+        for nxt, w in graph.get(node, []):
+            heapq.heappush(pq, (d + w, nxt))
+
+    return dist
+
+
+import heapq
+
+# Given a connected graph represented by a list of edges, where
+# edge[0] = src, edge[1] = dst, and edge[2] = weight,
+# find the shortest path from src to every other node in the 
+# graph. There are n nodes in the graph.
+# O(E * logV), O(E * logE) is also correct.
+def shortestPath(edges, n, src):
+    adj = {}
+    for i in range(1, n + 1):
+        adj[i] = []
+        
+    # s = src, d = dst, w = weight
+    for s, d, w in edges:
+        adj[s].append([d, w])
+
+    shortest = {}
+    minHeap = [[0, src]]
+    while minHeap:
+        w1, n1 = heapq.heappop(minHeap)
+        if n1 in shortest:
+            continue
+        shortest[n1] = w1
+
+        for n2, w2 in adj[n1]:
+            if n2 not in shortest:
+                heapq.heappush(minHeap, [w1 + w2, n2])
+    return shortest
