@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 class Metrics:
 
@@ -86,7 +87,7 @@ class Metrics:
         if mag1 == 0.0 or mag2 == 0.0:
             return 0.0
     
-        return np.dot / ((mag1 * mag2) ** 0.5)
+        return dot / ((mag1 * mag2) ** 0.5)
 
     
 
@@ -410,24 +411,53 @@ class LinearRegressionGD:
         return np.dot(X, self.weights) + self.bias
 
 
-if __name__ == "__main__":
-    y_true = [3, -0.5, 2, 7]
-    y_pred = [2.5, 0.0, 2, 8]
+import timeit
 
-    print("Mean Squared Error:", Metrics.mean_squared_error(y_true, y_pred))
-    print("Mean Absolute Error:", Metrics.mean_absolute_error(y_true, y_pred))
-    print("Root Mean Squared Error:", Metrics.root_mean_squared_error(y_true, y_pred))
-    print("R2 Score:", Metrics.r2_score(y_true, y_pred))
-    print("Adjusted R2 Score:", Metrics.adjusted_r2(y_true, y_pred, n_features=2))
-    y_true_binary = [1, 0, 1, 1]
-    y_pred_binary = [0.9, 0.1, 0.8, 0.7]
-    print("Binary Cross Entropy:", Metrics.binary_cross_entropy(y_true_binary, y_pred_binary))
-    y_true_class = [1, 0, 1, 1]
-    y_pred_class = [1, 0, 0, 1]
-    print("Accuracy Score:", Metrics.accuracy_score(y_true_class, y_pred_class))
-    print("Precision Score:", Metrics.precision_score(y_true_class, y_pred_class))
-    print("Cosine Similarity:", Metrics.cosine_similarity([1, 0, 0], [0, 1, 0]))
-    print("Euclidean Distanc", Metrics.euclidean_distance([3, 4], [0, 0]))  # 5.0
-    print("Euclidean Distance", Metrics.euclidean_distance([1, 2, 3], [4, 5, 6]))  # 5.196...
+NUM = 1234543218
+Y_TRUE = [3, -0.5, 2, 7]
+Y_PRED = [2.5, 0.0, 2, 8]
+ITER = 1_000_000
+
+tests = {
+    "sum method": "Metrics.cosine_similarity(Y_TRUE, Y_PRED)",
+    "without sum method": "Metrics.cosine_similarity_v2(Y_TRUE, Y_PRED)",
+}
+
+setup = "from __main__ import Metrics, Y_TRUE, Y_PRED"
+
+print("SETUP STRING:\n" + setup)
+print(f"Benchmarking with NUM={NUM:,} for {ITER:,} iterations:\n")
+print(f"{'Method':20s} | {'Result':6s} | Time (seconds)")
+print("-" * 50)
+
+for name, stmt in tests.items():
+    result = eval(stmt)
+    t = timeit.timeit(stmt, setup=setup, number=ITER)
+    print(f"{name:20s} | {str(result):6s} | {t:.6f}")
+
+
+
+
+
+# if __name__ == "__main__":
+#     y_true = [3, -0.5, 2, 7]
+#     y_pred = [2.5, 0.0, 2, 8]
+
+#     print("Mean Squared Error:", Metrics.mean_squared_error(y_true, y_pred))
+#     print("Mean Absolute Error:", Metrics.mean_absolute_error(y_true, y_pred))
+#     print("Root Mean Squared Error:", Metrics.root_mean_squared_error(y_true, y_pred))
+#     print("R2 Score:", Metrics.r2_score(y_true, y_pred))
+#     print("Adjusted R2 Score:", Metrics.adjusted_r2(y_true, y_pred, n_features=2))
+#     y_true_binary = [1, 0, 1, 1]
+#     y_pred_binary = [0.9, 0.1, 0.8, 0.7]
+#     print("Binary Cross Entropy:", Metrics.binary_cross_entropy(y_true_binary, y_pred_binary))
+#     y_true_class = [1, 0, 1, 1]
+#     y_pred_class = [1, 0, 0, 1]
+#     print("Accuracy Score:", Metrics.accuracy_score(y_true_class, y_pred_class))
+#     print("Precision Score:", Metrics.precision_score(y_true_class, y_pred_class))
+#     print("Cosine Similarity:", Metrics.cosine_similarity([1, 0, 0], [0, 1, 0]))
+#     print("Cosine Similarity 2:", Metrics.cosine_similarity_v2([1, 0, 0], [0, 1, 0]))
+#     print("Euclidean Distanc", Metrics.euclidean_distance([3, 4], [0, 0]))  # 5.0
+#     print("Euclidean Distance", Metrics.euclidean_distance([1, 2, 3], [4, 5, 6]))  # 5.196...
 
 
