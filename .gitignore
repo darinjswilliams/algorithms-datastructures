@@ -3,3 +3,9 @@
 .python-version
 uv.lock
 *.log
+.env
+document_workflows/.adw/
+document_workflows/data/
+document_workflows/lib/
+document_workflows/__pycache__/
+
